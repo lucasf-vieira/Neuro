@@ -1,3 +1,6 @@
+from pathlib import Path
+from lerobot.common.cameras.configs import ColorMode, Cv2Rotation
+from lerobot.common.cameras.opencv.configuration_opencv import OpenCVCameraConfig
 import torch
 from lerobot.common.utils.utils import (
     get_safe_torch_device,
@@ -7,16 +10,37 @@ from lerobot.common.policies.smolvla.modeling_smolvla import SmolVLAPolicy
 from lerobot.common.robots.so101_follower import SO101FollowerConfig, SO101Follower
 
 
+camera_external_config = OpenCVCameraConfig(
+    index_or_path=2,
+    fps=30,
+    width=640,
+    height=480,
+    color_mode=ColorMode.RGB,
+    rotation=Cv2Rotation.NO_ROTATION
+)
+
+camera_bot_config = OpenCVCameraConfig(
+    index_or_path=4,
+    fps=30,
+    width=640,
+    height=480,
+    color_mode=ColorMode.RGB,
+    rotation=Cv2Rotation.NO_ROTATION
+)
+
 robot_config = SO101FollowerConfig(
     port="/dev/ttyACM0",
+    cameras={"robo": camera_bot_config, "out": camera_external_config},
     id="movie",
+    calibration_dir=Path("/home/lucasfv/Workspaces/hackathon_lerobot/Neuro/calibration")
 )
 
 robot = SO101Follower(robot_config)
 robot.connect()
 
-device = get_safe_torch_device("cuda")
-policy = SmolVLAPolicy.from_pretrained("/home/fablab/lerobot/outputs/train/my_smolvla/checkpoints/last/pretrained_model/config.json")
+# device = get_safe_torch_device("cuda")
+device = get_safe_torch_device("cpu")
+policy = SmolVLAPolicy.from_pretrained(Path("/home/lucasfv/Workspaces/hackathon_lerobot/Neuro/pretrained_model"))
 
 done = True
 while not done:

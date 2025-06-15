@@ -6,3 +6,4 @@ yolo/runs
 yolov8*.pt
 token.txt
 *wav
+*.safetensors
