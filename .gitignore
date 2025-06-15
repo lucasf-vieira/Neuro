@@ -1,0 +1,8 @@
+lerobot
+venv
+yolo/runs
+*cache*
+*.jpg
+yolov8*.pt
+token.txt
+*wav
