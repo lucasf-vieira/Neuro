@@ -10,3 +10,35 @@ cd lerobot && python lerobot/scripts/train.py \
   --policy.device=cuda \
   --wandb.enable=true \
   --save_freq=1000
+
+  python -m lerobot.record \
+    --robot.type=so101_follower \
+    --robot.port=/dev/ttyACM1 \
+    --robot.id=movie \
+    --robot.cameras="{ robo: {type: opencv, index_or_path: 1, width: 640, height: 480, fps: 30},  out: {type: opencv, index_or_path: 7, width: 640, height: 480, fps: 30}}" \
+    --display_data=true \
+    --dataset.repo_id=lucasfv/so101_eval1 \
+    --dataset.num_episodes=1 \
+    --dataset.single_task="pick the red screwdriver and hold it in the air" \
+    --dataset.reset_time_s=10 \
+    --dataset.episode_time_s=40 \
+    --policy.path=outputs/train/Neuro01/checkpoints/last/pretrained_model
+    
+    
+    
+    
+python -m lerobot.record \
+    --robot.type=so101_follower \
+    --robot.port=/dev/ttyACM1 \
+    --robot.id=movie \
+    --robot.cameras="{ robo: {type: opencv, index_or_path: 7, width: 640, height: 480, fps: 30},  out: {type: opencv, index_or_path: 1, width: 640, height: 480, fps: 30}}" \
+    --teleop.type=so101_leader \
+    --teleop.port=/dev/ttyACM0 \
+    --teleop.id=bee \
+    --display_data=true \
+    --dataset.repo_id=lucasfv/so101_test \
+    --dataset.num_episodes=10 \
+    --dataset.reset_time_s=10 \
+    --dataset.episode_time_s=20 \
+    --dataset.single_task="pick the red screwdriver and hold it in the air" \
+    --resume=true
